@@ -15,7 +15,7 @@ Installation can be made with a AUR helper tool like [Trizen](https://aur.archli
 trizen god-git
 ```
 
-![Trizen Installation](https://user-images.githubusercontent.com/24392180/58642389-ed404c80-8305-11e9-9f05-b62e6d299dce.gif)
+![Trizen Installation](https://user-images.githubusercontent.com/24392180/58751001-95d6e380-84a1-11e9-9314-888c94ab0475.gif)
 
 ### Manual Installation
 

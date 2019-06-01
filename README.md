@@ -1,4 +1,4 @@
-# god [![AUR](https://img.shields.io/aur/version/g0d.svg?style=flat-square)](https://aur.archlinux.org/packages/g0d/) [![Build Status](https://img.shields.io/travis/KeyLo99/God.svg?style=flat-square)](https://travis-ci.org/KeyLo99/God)
+# god [![AUR](https://img.shields.io/aur/version/god-git.svg?style=flat-square)](https://aur.archlinux.org/packages/god-git/) [![Build Status](https://img.shields.io/travis/KeyLo99/God.svg?style=flat-square)](https://travis-ci.org/KeyLo99/God)
 
 ### Linux utility for simplifying the Git usage.
 
@@ -7,12 +7,12 @@ Shortcuts of [commonly used git commands](https://github.com/joshnh/Git-Commands
 
 ## Installation
 
-### AUR ([g0d](https://aur.archlinux.org/packages/g0d/))
+### AUR ([god-git](https://aur.archlinux.org/packages/god-git/))
 
 Installation can be made with a AUR helper tool like [Trizen](https://aur.archlinux.org/packages/trizen/) or [yay](https://aur.archlinux.org/packages/yay/).
 
 ```
-trizen g0d
+trizen god-git
 ```
 
 ![Trizen Installation](https://user-images.githubusercontent.com/24392180/58642389-ed404c80-8305-11e9-9f05-b62e6d299dce.gif)

@@ -148,7 +148,7 @@ func buildCmd(line string) (string) {
 }
 
 // Start the interactive shell.
-func startTerm(){
+func startTerm(persistent bool){
 	term, err := terminal.NewWithStdInOut()
 	if err != nil {
 		panic(err)
@@ -160,8 +160,8 @@ func startTerm(){
 	for {
 		// Read the keyboard input.
 		line, err := term.ReadLine()
-		// Exit on Ctrl-D and Ctrl-C.
-		if err == io.EOF ||  line == "^C" {
+		// Exit on Ctrl-D and Ctrl-C (if -p not provided).
+		if ((err == io.EOF) || (line == "^C" && !persistent)) {
 			fmt.Println()
 			return
 		}
@@ -274,11 +274,12 @@ func main() {
 	// If -v argument is given, show project information and exit.
 	// If not, start the god terminal.
 	versionFlag := flag.Bool("v", false, "Show version information")
+	persistentFlag := flag.Bool("p", false, "Don't exit on ^C")
 	flag.Parse()
 	if(*versionFlag){
 		showVersion()	
 	}else{
 		prepareCmds()
-		startTerm()
+		startTerm(*persistentFlag)
 	}
 }

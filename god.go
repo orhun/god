@@ -224,6 +224,7 @@ func showHelp(){
 	cliCmds := map[string]string{
 		"git": "List available git commands",
 		"sc": "List git shortcuts",
+		"alias": "Save the shortcuts as aliases",
 		"help": "Show this help message",
 		"version": "Show version information",
 		"clear": "Clear the terminal", 

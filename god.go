@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"strings"
 	"github.com/fatih/color"
+	"github.com/manifoldco/promptui"
 	"github.com/olekukonko/tablewriter"
 	"github.com/common-nighthawk/go-figure"
 	"github.com/carmark/pseudo-terminal-go/terminal"
@@ -226,7 +227,7 @@ func showHelp(){
 	cliCmds := map[string]string{
 		"git": "List available git commands",
 		"sc": "List git shortcuts",
-		"alias": "Save the shortcuts as aliases",
+		"alias": "Shell & Git alias options",
 		"help": "Show this help message",
 		"version": "Show version information",
 		"clear": "Clear the terminal", 
@@ -265,6 +266,16 @@ func showShortcuts(){
 // Save shortened commands as shell alias or Git alias.
 func saveAliases(){
 
+
+	/*
+	for index, cmd := range append(cmdSlice, getShortcutSlice(gitShortcuts, 1)...) {
+		cmd = " " + cmd + " "
+		if (strings.Contains(line, cmd)) {
+			line = strings.Replace(line, cmd, " " + allCmds[index] + " ", -1)
+		}else if (strings.Contains(line, strings.ToUpper(cmd))) {
+			line = strings.Replace(line, strings.ToUpper(cmd), " " + allCmds[index] + " ", -1)
+		}
+	}*/
 }
 
 // Show project information including version.

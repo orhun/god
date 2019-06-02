@@ -181,6 +181,8 @@ func startTerm(persistent bool){
 			showCommands()
 		case "sc":
 			showShortcuts()
+		case "alias":
+			saveAliases()
 		default:
 			// Build the git command.
 			gitCmd := buildCmd(line)
@@ -258,6 +260,11 @@ func showShortcuts(){
 		table.Append([]string{shortcut[1], shortcut[0]})
 	}
 	table.Render()
+}
+
+// Save shortened commands as shell alias or Git alias.
+func saveAliases(){
+
 }
 
 // Show project information including version.

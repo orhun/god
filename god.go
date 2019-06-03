@@ -264,7 +264,8 @@ func showShortcuts(){
 
 // Save shortened commands as shell alias or Git alias.
 func saveAliases(){
-	aliasOpts := []string{
+	// TODO
+	/*aliasOpts := []string{
 		"shell",
 		"git",
 	}
@@ -280,12 +281,11 @@ func saveAliases(){
 	fmt.Println(aliasOpts)
 	shellFormat := "alias %s='git %s'"
 	gitFormat := "%s = %s"
-	_ = shellFormat
 	whiteColor.Println("Alias list for " + selection + ":")
 	for index, cmd := range append(cmdSlice, getShortcutSlice(gitShortcuts, 1)...) {
 		alias := fmt.Sprintf(gitFormat, cmd, allCmds[index])
 		fmt.Println(alias)
-	}
+	}*/
 	
 }
 

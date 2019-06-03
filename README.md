@@ -1,4 +1,4 @@
-# God [![Release](https://img.shields.io/github/release/KeyLo99/God.svg?style=flat-square&color=black)](https://github.com/KeyLo99/God/releases)
+# God [![Release](https://img.shields.io/github/release/KeyLo99/God.svg?style=flat-square)](https://github.com/KeyLo99/God/releases)
 [![AUR](https://img.shields.io/aur/version/god-git.svg?style=flat-square)](https://aur.archlinux.org/packages/god-git/) [![Build Status](https://img.shields.io/travis/KeyLo99/God.svg?style=flat-square)](https://travis-ci.org/KeyLo99/God) [![Go Report Card](https://goreportcard.com/badge/github.com/keylo99/god?style=flat-square)](https://goreportcard.com/report/github.com/keylo99/god) [![License](https://img.shields.io/badge/license-GPLv3-blue.svg?style=flat-square&color=red)](./LICENSE)
 
 ### Linux utility for simplifying the Git usage.

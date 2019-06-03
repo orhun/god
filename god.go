@@ -1,34 +1,34 @@
 package main
 
 import (
-	"io"
-	"fmt"
-	"os"
-	"flag"
 	"bytes"
-	"os/exec"
-	"strings"
+	"flag"
+	"fmt"
+	"github.com/carmark/pseudo-terminal-go/terminal"
+	"github.com/common-nighthawk/go-figure"
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
 	"github.com/olekukonko/tablewriter"
-	"github.com/common-nighthawk/go-figure"
-	"github.com/carmark/pseudo-terminal-go/terminal"
+	"io"
+	"os"
+	"os/exec"
+	"strings"
 )
 
 var version = "1.0"
-var outb, errb bytes.Buffer // Buffer for command output
+var outb, errb bytes.Buffer                 // Buffer for command output
 var cmdSlice, gitCmdSlice, allCmds []string // Slice for the shortened git commands
-var gitShortcuts[][] string // 2-d slice for the git shortcuts
+var gitShortcuts [][]string                 // 2-d slice for the git shortcuts
 var whiteColor (*color.Color) = color.New(color.FgWhite, color.Bold)
 var restartTerm bool = false // Handling the stdout issues.
-var termChar = "#" // Character for non-git terminal commands.
+var termChar = "#"           // Character for non-git terminal commands.
 var promptStr = "[god ~]$ "
 
 // Executes the terminal command and returns output.
 // stdout parameter determines the output stream.
-func execCmd(input string, stdout bool) (string) {
-    // Remove the newline character.
-    input = strings.TrimSuffix(input, "\n")
+func execCmd(input string, stdout bool) string {
+	// Remove the newline character.
+	input = strings.TrimSuffix(input, "\n")
 	// Prepare the command to execute.
 	// sh used for handling the command parameters.
 	// Otherwise, exec library takes the parameters
@@ -36,25 +36,25 @@ func execCmd(input string, stdout bool) (string) {
 	// want due to the complexity of git commands.
 	cmd := exec.Command("sh", "-c", input)
 	// Set the correct output device.
-	if stdout{
-    	cmd.Stderr = os.Stderr
+	if stdout {
+		cmd.Stderr = os.Stderr
 		cmd.Stdout = os.Stdout
-	}else{
+	} else {
 		cmd.Stdout = &outb
 		cmd.Stderr = &errb
 	}
-	// Execute the command and return output 
+	// Execute the command and return output
 	// depending on the stdout parameter.
 	cmd.Run()
-	if (!stdout) {
+	if !stdout {
 		return outb.String()
-	} 
+	}
 	return ""
 }
 
 // Search the given query in slice.
 // Returns true if the element exists.
-func searchInSlice(slice []string, query string) (bool) {
+func searchInSlice(slice []string, query string) bool {
 	set := make(map[string]bool)
 	for _, v := range slice {
 		set[v] = true
@@ -64,7 +64,7 @@ func searchInSlice(slice []string, query string) (bool) {
 
 // Returns a slice with given dimension parameter.
 // Used for getting keys or values from a 2-d slice.
-func getShortcutSlice(slice [][]string, d int) ([]string){
+func getShortcutSlice(slice [][]string, d int) []string {
 	var shortcuts []string
 	for _, shortcut := range slice {
 		shortcuts = append(shortcuts, shortcut[d])
@@ -73,7 +73,7 @@ func getShortcutSlice(slice [][]string, d int) ([]string){
 }
 
 // Prepare (shorten) the git commands.
-func prepareCmds() ([]string){
+func prepareCmds() []string {
 	// Show status if repository exists in directory.
 	execCmd("git status", true)
 	// Trimming the string using sed.
@@ -84,34 +84,34 @@ func prepareCmds() ([]string){
 	// Parsing the git commands.
 	// grep '^  *[a-z]' -> Select the lines starting with indent.
 	// tr -d '*' -> Remove the '*' character.
-	parseGitCmd := 
+	parseGitCmd :=
 		"git help | grep '^  *[a-z]' | " + removeSpaces +
-		"git branch | tr -d '*' | " + removeSpaces +
-		"git remote"
+			"git branch | tr -d '*' | " + removeSpaces +
+			"git remote"
 	cmdStr := execCmd(parseGitCmd, false)
 	gitCmdSlice = strings.Split(cmdStr, "\n")
 	for i, cmd := range gitCmdSlice {
-		if (len(cmd) > 0){
+		if len(cmd) > 0 {
 			// Use the first character of git command
 			// for the new command if not exists in the
 			// commands slice. (cmdSlice)
-			// If first character is in the list, compose 
+			// If first character is in the list, compose
 			// a two character abbreviation for it and
 			// add it to slice.
 			firstChar := string([]rune(cmd)[0])
-			if (!searchInSlice(cmdSlice, firstChar)){
+			if !searchInSlice(cmdSlice, firstChar) {
 				cmdSlice = append(cmdSlice, firstChar)
-			}else{
-				cmdSlice = append(cmdSlice, firstChar + 
-					string([]rune(cmd)[len(cmd)/2])) 
+			} else {
+				cmdSlice = append(cmdSlice, firstChar+
+					string([]rune(cmd)[len(cmd)/2]))
 			}
-		}else{
+		} else {
 			// Remove empty character
 			gitCmdSlice = append(gitCmdSlice[:i], gitCmdSlice[i+1:]...)
 		}
 	}
 	// Add git shortcuts.
-	gitShortcuts = append(gitShortcuts, 
+	gitShortcuts = append(gitShortcuts,
 		[]string{"add -A", "aa"},
 		[]string{"commit -m", "cmt"},
 		[]string{"remote -v", "rmt"},
@@ -126,29 +126,29 @@ func prepareCmds() ([]string){
 
 // Create a git command from the given string.
 // Returns changed/new command.
-func buildCmd(line string) (string) {
+func buildCmd(line string) string {
 	line = " " + line + " "
 	// Run command without git if it starts
 	// with '#' character.
-	if (strings.Contains(string([]rune(line)[:2]), termChar)) {
-		return strings.Replace(line, " " + termChar, " ", 1)
+	if strings.Contains(string([]rune(line)[:2]), termChar) {
+		return strings.Replace(line, " "+termChar, " ", 1)
 	}
 	// Support the commands starting with git.
 	line = strings.Replace(line, " git ", " ", -1)
 	// Replace the shortened command with its original.
 	for index, cmd := range append(cmdSlice, getShortcutSlice(gitShortcuts, 1)...) {
 		cmd = " " + cmd + " "
-		if (strings.Contains(line, cmd)) {
-			line = strings.Replace(line, cmd, " " + allCmds[index] + " ", -1)
-		}else if (strings.Contains(line, strings.ToUpper(cmd))) {
-			line = strings.Replace(line, strings.ToUpper(cmd), " " + allCmds[index] + " ", -1)
+		if strings.Contains(line, cmd) {
+			line = strings.Replace(line, cmd, " "+allCmds[index]+" ", -1)
+		} else if strings.Contains(line, strings.ToUpper(cmd)) {
+			line = strings.Replace(line, strings.ToUpper(cmd), " "+allCmds[index]+" ", -1)
 		}
 	}
 	return "git" + line
 }
 
 // Start the interactive shell.
-func startTerm(persistent bool){
+func startTerm(persistent bool) {
 	term, err := terminal.NewWithStdInOut()
 	if err != nil {
 		panic(err)
@@ -156,18 +156,18 @@ func startTerm(persistent bool){
 	defer term.ReleaseFromStdInOut()
 	whiteColor.Println("Type '?' for help or 'git' for list of commands.")
 	term.SetPrompt(promptStr)
-	cmdLoop:
+cmdLoop:
 	for {
 		// Read the keyboard input.
 		line, err := term.ReadLine()
 		// Exit on Ctrl-D and Ctrl-C (if -p not provided).
-		if ((err == io.EOF) || (line == "^C" && !persistent)) {
+		if (err == io.EOF) || (line == "^C" && !persistent) {
 			fmt.Println()
 			return
 		}
 		// Built-in commands.
-		switch line{
-		case "", " ": 
+		switch line {
+		case "", " ":
 			break
 		case "clear":
 			execCmd("clear", true)
@@ -188,7 +188,7 @@ func startTerm(persistent bool){
 			gitCmd := buildCmd(line)
 			// Release the std in/out for preventing the
 			// git username & password input issues.
-			if (strings.Contains(gitCmd, "push")){
+			if strings.Contains(gitCmd, "push") {
 				restartTerm = true
 				term.ReleaseFromStdInOut()
 			}
@@ -198,7 +198,7 @@ func startTerm(persistent bool){
 			}
 			// Restart the terminal for flushing the stdout.
 			// It is necessary for input required situations.
-			if (restartTerm) {
+			if restartTerm {
 				term, err = terminal.NewWithStdInOut()
 				defer term.ReleaseFromStdInOut()
 				term.SetPrompt(promptStr)
@@ -209,12 +209,12 @@ func startTerm(persistent bool){
 }
 
 // Takes 'table' parameter and returns colored.
-func setTableColors(table (*tablewriter.Table)) (*tablewriter.Table) {
+func setTableColors(table *tablewriter.Table) *tablewriter.Table {
 	whiteTable := tablewriter.Colors{
-		tablewriter.Bold, 
+		tablewriter.Bold,
 		tablewriter.FgHiWhiteColor}
 	blackTable := tablewriter.Colors{
-		tablewriter.Bold, 
+		tablewriter.Bold,
 		tablewriter.FgHiBlackColor}
 	table.SetHeaderColor(whiteTable, whiteTable)
 	table.SetColumnColor(whiteTable, blackTable)
@@ -222,15 +222,15 @@ func setTableColors(table (*tablewriter.Table)) (*tablewriter.Table) {
 }
 
 // Display help message.
-func showHelp(){
+func showHelp() {
 	cliCmds := map[string]string{
-		"git": "List available git commands",
-		"sc": "List git shortcuts",
-		"alias": "Print shell or git aliases",
-		"help": "Show this help message",
+		"git":     "List available git commands",
+		"sc":      "List git shortcuts",
+		"alias":   "Print shell or git aliases",
+		"help":    "Show this help message",
 		"version": "Show version information",
-		"clear": "Clear the terminal", 
-		"exit": "Exit shell"}
+		"clear":   "Clear the terminal",
+		"exit":    "Exit shell"}
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Command", "Description"})
 	table = setTableColors(table)
@@ -241,7 +241,7 @@ func showHelp(){
 }
 
 // Show git commands in table.
-func showCommands(){
+func showCommands() {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Command", "git"})
 	table = setTableColors(table)
@@ -252,7 +252,7 @@ func showCommands(){
 }
 
 // Show commonly used git commands shortcuts.
-func showShortcuts(){
+func showShortcuts() {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Shortcut", "Command"})
 	table = setTableColors(table)
@@ -263,14 +263,14 @@ func showShortcuts(){
 }
 
 // Save shortened commands as shell alias or Git alias.
-func prompAlias(){
+func prompAlias() {
 	aliasOpts := []string{
 		"shell",
 		"git",
 	}
-	formats := map[string] string {
+	formats := map[string]string{
 		"shell": "alias %s='git %s'",
-		"git": "%s = %s",
+		"git":   "%s = %s",
 	}
 	aliasPrompt := promptui.Select{
 		Label: "Create alias for",
@@ -280,7 +280,7 @@ func prompAlias(){
 	if err != nil {
 		fmt.Printf("Selection failed: %v\n", err)
 	}
-	if (len(selection) > 0){
+	if len(selection) > 0 {
 		whiteColor.Println("Alias list for " + selection + ":")
 		for index, cmd := range append(cmdSlice, getShortcutSlice(gitShortcuts, 1)...) {
 			alias := fmt.Sprintf(formats[selection], cmd, allCmds[index])
@@ -290,7 +290,7 @@ func prompAlias(){
 }
 
 // Show project information including version.
-func showVersion(){
+func showVersion() {
 	fmt.Println()
 	asciiFigure := figure.NewFigure("god", "cosmic", true)
 	asciiFigure.Print()
@@ -306,9 +306,9 @@ func main() {
 	versionFlag := flag.Bool("v", false, "Show version information")
 	persistentFlag := flag.Bool("p", false, "Don't exit on ^C")
 	flag.Parse()
-	if(*versionFlag){
-		showVersion()	
-	}else{
+	if *versionFlag {
+		showVersion()
+	} else {
 		prepareCmds()
 		startTerm(*persistentFlag)
 	}

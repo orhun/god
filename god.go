@@ -199,7 +199,7 @@ cmdLoop:
 			// Restart the terminal for flushing the stdout.
 			// It is necessary for input required situations.
 			if restartTerm {
-				term, err = terminal.NewWithStdInOut()
+				term, _ = terminal.NewWithStdInOut()
 				defer term.ReleaseFromStdInOut()
 				term.SetPrompt(promptStr)
 				restartTerm = false

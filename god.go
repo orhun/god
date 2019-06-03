@@ -182,7 +182,7 @@ cmdLoop:
 		case "sc":
 			showShortcuts()
 		case "alias":
-			prompAlias()
+			promptAlias()
 		default:
 			// Build the git command.
 			gitCmd := buildCmd(line)
@@ -263,7 +263,7 @@ func showShortcuts() {
 }
 
 // Save shortened commands as shell alias or Git alias.
-func prompAlias() {
+func promptAlias() {
 	aliasOpts := []string{
 		"shell",
 		"git",

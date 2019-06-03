@@ -47,13 +47,13 @@ go install
 +---------+-----------------------------+
 | COMMAND |         DESCRIPTION         |
 +---------+-----------------------------+
+| exit    | Exit shell                  |
 | git     | List available git commands |
 | sc      | List git shortcuts          |
-| alias   | Shell & Git alias options   |
+| alias   | Print shell or git aliases  |
 | help    | Show this help message      |
 | version | Show version information    |
 | clear   | Clear the terminal          |
-| exit    | Exit shell                  |
 +---------+-----------------------------+
 ```
 

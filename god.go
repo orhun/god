@@ -17,7 +17,7 @@ import (
 
 var version = "1.0"
 var outb, errb bytes.Buffer // Buffer for command output
-var cmdSlice, gitCmdSlice []string // Slice for the shortened git commands
+var cmdSlice, gitCmdSlice, allCmds []string // Slice for the shortened git commands
 var gitShortcuts[][] string // 2-d slice for the git shortcuts
 var whiteColor (*color.Color) = color.New(color.FgWhite, color.Bold)
 var restartTerm bool = false // Handling the stdout issues.
@@ -119,7 +119,8 @@ func prepareCmds() ([]string){
 		[]string{"log --graph --decorate --all", "ll"},
 		[]string{"log --graph --decorate --oneline --all", "lo"},
 		[]string{"ls-files", "ls"})
-
+	// Create a slice for storing all commands.
+	allCmds = append(gitCmdSlice, getShortcutSlice(gitShortcuts, 0)...)
 	return gitCmdSlice
 }
 
@@ -134,8 +135,6 @@ func buildCmd(line string) (string) {
 	}
 	// Support the commands starting with git.
 	line = strings.Replace(line, " git ", " ", -1)
-	// Create a slice for storing all commands.
-	allCmds := append(gitCmdSlice, getShortcutSlice(gitShortcuts, 0)...)
 	// Replace the shortened command with its original.
 	for index, cmd := range append(cmdSlice, getShortcutSlice(gitShortcuts, 1)...) {
 		cmd = " " + cmd + " "
@@ -272,20 +271,15 @@ func saveAliases(){
 			"git",
 		},
 	}
-	_, result, err := aliasPrompt.Run()
+	_, selection, err := aliasPrompt.Run()
 	if err != nil {
 		fmt.Printf("Selection failed %v\n", err)
 	}
-	_ = result
-	/*
+	_ = selection
 	for index, cmd := range append(cmdSlice, getShortcutSlice(gitShortcuts, 1)...) {
-		cmd = " " + cmd + " "
-		if (strings.Contains(line, cmd)) {
-			line = strings.Replace(line, cmd, " " + allCmds[index] + " ", -1)
-		}else if (strings.Contains(line, strings.ToUpper(cmd))) {
-			line = strings.Replace(line, strings.ToUpper(cmd), " " + allCmds[index] + " ", -1)
-		}
-	}*/
+		fmt.Println(cmd + " ~ " + allCmds[index])
+	}
+	
 }
 
 // Show project information including version.

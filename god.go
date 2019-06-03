@@ -182,7 +182,7 @@ func startTerm(persistent bool){
 		case "sc":
 			showShortcuts()
 		case "alias":
-			saveAliases()
+			prompAlias()
 		default:
 			// Build the git command.
 			gitCmd := buildCmd(line)
@@ -226,7 +226,7 @@ func showHelp(){
 	cliCmds := map[string]string{
 		"git": "List available git commands",
 		"sc": "List git shortcuts",
-		"alias": "Shell & Git alias options",
+		"alias": "Print shell or git aliases",
 		"help": "Show this help message",
 		"version": "Show version information",
 		"clear": "Clear the terminal", 
@@ -263,7 +263,7 @@ func showShortcuts(){
 }
 
 // Save shortened commands as shell alias or Git alias.
-func saveAliases(){
+func prompAlias(){
 	aliasOpts := []string{
 		"shell",
 		"git",
@@ -278,12 +278,14 @@ func saveAliases(){
 	}
 	_, selection, err := aliasPrompt.Run()
 	if err != nil {
-		fmt.Printf("Selection failed %v\n", err)
+		fmt.Printf("Selection failed: %v\n", err)
 	}
-	whiteColor.Println("Alias list for " + selection + ":")
-	for index, cmd := range append(cmdSlice, getShortcutSlice(gitShortcuts, 1)...) {
-		alias := fmt.Sprintf(formats[selection], cmd, allCmds[index])
-		fmt.Println(alias)
+	if (len(selection) > 0){
+		whiteColor.Println("Alias list for " + selection + ":")
+		for index, cmd := range append(cmdSlice, getShortcutSlice(gitShortcuts, 1)...) {
+			alias := fmt.Sprintf(formats[selection], cmd, allCmds[index])
+			fmt.Println(alias)
+		}
 	}
 }
 

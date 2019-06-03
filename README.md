@@ -49,6 +49,7 @@ go install
 +---------+-----------------------------+
 | git     | List available git commands |
 | sc      | List git shortcuts          |
+| alias   | Shell & Git alias options   |
 | help    | Show this help message      |
 | version | Show version information    |
 | clear   | Clear the terminal          |
@@ -160,7 +161,6 @@ A: The project aims to provide a interactive shell that have built-in shortened 
 ## Todo(s)
 
 * Support adding custom shortcuts.
-* Add 'save' command to CLI for saving commands as Git config file.
 * Terminal autocomplete feature.
 
 ## License

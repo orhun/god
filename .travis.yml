@@ -14,7 +14,10 @@ git:
 
 # Dependencies
 before_install:
-  - go get -v github.com/fatih/color
-  - go get -v github.com/olekukonko/tablewriter
-  - go get -v github.com/common-nighthawk/go-figure
-  - go get -v github.com/carmark/pseudo-terminal-go/terminal
+  - go get -d ./...
+
+script:
+  - go test -race -coverprofile=coverage.txt -covermode=atomic
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

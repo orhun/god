@@ -118,7 +118,8 @@ func prepareCmds() []string {
 		[]string{"rm -r", "rr"},
 		[]string{"log --graph --decorate --all", "ll"},
 		[]string{"log --graph --decorate --oneline --all", "lo"},
-		[]string{"ls-files", "ls"})
+		[]string{"ls-files", "ls"},
+		[]string{"config credential.helper store", "crds"})
 	// Create a slice for storing all commands.
 	allCmds = append(gitCmdSlice, getShortcutSlice(gitShortcuts, 0)...)
 	return gitCmdSlice

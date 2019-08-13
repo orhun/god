@@ -35,7 +35,7 @@ export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
 ```
 
-And finally install the `god`.
+And finally install the `god` package.
 
 ```
 go install

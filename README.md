@@ -1,5 +1,5 @@
-# god [![Release](https://img.shields.io/github/release/KeyLo99/God.svg?style=flat-square)](https://github.com/KeyLo99/God/releases)
-[![AUR](https://img.shields.io/aur/version/god-git.svg?style=flat-square)](https://aur.archlinux.org/packages/god-git/) [![Build Status](https://img.shields.io/travis/KeyLo99/God.svg?style=flat-square)](https://travis-ci.org/KeyLo99/God) [![Go Report Card](https://goreportcard.com/badge/github.com/keylo99/god?style=flat-square)](https://goreportcard.com/report/github.com/keylo99/god) [![License](https://img.shields.io/badge/license-GPLv3-blue.svg?style=flat-square&color=red)](./LICENSE)
+# god [![Release](https://img.shields.io/github/release/orhun/God.svg?style=flat-square)](https://github.com/orhun/God/releases)
+[![AUR](https://img.shields.io/aur/version/god-git.svg?style=flat-square)](https://aur.archlinux.org/packages/god-git/) [![Build Status](https://img.shields.io/travis/orhun/God.svg?style=flat-square)](https://travis-ci.org/orhun/God) [![Go Report Card](https://goreportcard.com/badge/github.com/orhun/god?style=flat-square)](https://goreportcard.com/report/github.com/orhun/god) [![License](https://img.shields.io/badge/license-GPLv3-blue.svg?style=flat-square&color=red)](./LICENSE)
 
 ### Linux utility for simplifying the Git usage.
 
@@ -147,7 +147,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
  1 file changed, 14 insertions(+)
 
 [god ~]$ ps o mt
-To https://github.com/KeyLo99/God.git
+To https://github.com/orhun/God.git
    45e8aba..fba7e79  master -> master
 ```
 
@@ -170,4 +170,4 @@ GNU General Public License v3. (see [gpl](https://www.gnu.org/licenses/gpl.txt))
 
 ## Credit
 
-Copyright (C) 2019 by KeyLo99 https://www.github.com/KeyLo99
+Copyright (C) 2019 by orhun https://www.github.com/orhun

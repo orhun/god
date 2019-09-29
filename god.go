@@ -136,6 +136,12 @@ func buildCmd(line string) string {
 	}
 	// Support the commands starting with git.
 	line = strings.Replace(line, " git ", " ", -1)
+	// Use the first quoted part if command contains quote.
+	quotedPart := ""
+	if strings.Contains(line, "\"") {
+		quotedPart = strings.Join(strings.Split(line, "\"")[1:], "\"")
+		line = strings.Split(line, "\"")[0] + "\""
+	}
 	// Replace the shortened command with its original.
 	for index, cmd := range append(cmdSlice, getShortcutSlice(gitShortcuts, 1)...) {
 		cmd = " " + cmd + " "
@@ -144,6 +150,10 @@ func buildCmd(line string) string {
 		} else if strings.Contains(line, strings.ToUpper(cmd)) {
 			line = strings.Replace(line, strings.ToUpper(cmd), " "+allCmds[index]+" ", -1)
 		}
+	}
+	// Add quoted part back to the command.
+	if quotedPart != "" {
+		line += quotedPart
 	}
 	return "git" + line
 }

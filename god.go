@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-var version = "1.0"
+var version = "1.6"
 var outb, errb bytes.Buffer                 // Buffer for command output
 var cmdSlice, gitCmdSlice, allCmds []string // Slice for the shortened git commands
 var gitShortcuts [][]string                 // 2-d slice for the git shortcuts

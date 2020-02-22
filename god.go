@@ -86,7 +86,8 @@ func prepareCmds() []string {
 	// tr -d '*' -> Remove the '*' character.
 	parseGitCmd :=
 		"git help | grep '^  *[a-z]' | " + removeSpaces +
-			"git branch | tr -d '*' | " + removeSpaces +
+			"git branch | tr -d '*' | " +
+			strings.Replace(removeSpaces, " -e 's/ *[A-Z].*//'", "", 1) +
 			"git remote"
 	cmdStr := execCmd(parseGitCmd, false)
 	gitCmdSlice = strings.Split(cmdStr, "\n")

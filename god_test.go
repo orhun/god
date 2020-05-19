@@ -6,11 +6,11 @@ import (
 )
 
 func TestExecCmd(t *testing.T) {
-	echoOutput := execCmd("echo 'test'", false)
+	echoOutput := execCmd(false, "echo", "'test'")
 	if !strings.Contains(echoOutput, "test") {
 		t.Errorf("Expected 'test', got '%s'", echoOutput)
 	}
-	if retval := execCmd("echo 'Current dir:' && pwd", true); len(retval) > 0 {
+	if retval := execCmd(true, "sh", "-c", "echo 'Current dir:' && pwd"); len(retval) > 0 {
 		t.Errorf("Error occurred while executing the command. (%s)", retval)
 	}
 }

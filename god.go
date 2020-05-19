@@ -16,7 +16,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-var version = "1.8"
+var version = "1.9"
 var outb, errb bytes.Buffer                 // Buffer for command output
 var cmdSlice, gitCmdSlice, allCmds []string // Slice for the shortened git commands
 var gitShortcuts [][]string                 // 2-d slice for the git shortcuts

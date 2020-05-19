@@ -27,15 +27,11 @@ var promptStr = "[god ~]$ "
 
 // Executes the terminal command and returns output.
 // stdout parameter determines the output stream.
-func execCmd(input string, stdout bool) string {
+func execCmd(stdout bool, command string, args ...string) string {
 	// Remove the newline character.
-	input = strings.TrimSuffix(input, "\n")
+	command = strings.TrimSuffix(command, "\n")
 	// Prepare the command to execute.
-	// sh used for handling the command parameters.
-	// Otherwise, exec library takes the parameters
-	// as argument which is something that we don't
-	// want due to the complexity of git commands.
-	cmd := exec.Command("sh", "-c", input)
+	cmd := exec.Command(command, args...)
 	// Set the correct output device.
 	if stdout {
 		cmd.Stderr = os.Stderr
@@ -76,7 +72,7 @@ func getShortcutSlice(slice [][]string, d int) []string {
 // Prepare (shorten) the git commands.
 func prepareCmds() []string {
 	// Show status if repository exists in directory.
-	execCmd("git status", true)
+	execCmd(true, "git", "status")
 	// Trimming the string using sed.
 	// 's/^\s*//' -> Substitute the found expression (' ' with '').
 	// 's/ *[A-Z].*//' -> Remove the git command description
@@ -90,7 +86,7 @@ func prepareCmds() []string {
 			"git branch | tr -d '*' | " +
 			strings.Replace(removeSpaces, " -e 's/ *[A-Z].*//'", "", 1) +
 			"git remote"
-	cmdStr := execCmd(parseGitCmd, false)
+	cmdStr := execCmd(false, "sh", "-c", parseGitCmd)
 	gitCmdSlice = strings.Split(cmdStr, "\n")
 	for i, cmd := range gitCmdSlice {
 		if len(cmd) > 0 {
@@ -183,7 +179,7 @@ cmdLoop:
 		case "", " ":
 			break
 		case "clear":
-			execCmd("clear", true)
+			execCmd(true, "clear")
 		case "exit":
 			break cmdLoop
 		case "?", "help":
@@ -206,7 +202,7 @@ cmdLoop:
 				term.ReleaseFromStdInOut()
 			}
 			// Handle the execution of the input.
-			if retval := execCmd(gitCmd, true); len(retval) > 0 {
+			if retval := execCmd(true, "sh", "-c", gitCmd); len(retval) > 0 {
 				fmt.Fprintln(os.Stderr, retval)
 			}
 			// Restart the terminal for flushing the stdout.

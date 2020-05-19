@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"io"
+	"os"
+	"os/exec"
+	"strings"
+
 	"github.com/carmark/pseudo-terminal-go/terminal"
 	"github.com/common-nighthawk/go-figure"
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
 	"github.com/olekukonko/tablewriter"
-	"io"
-	"os"
-	"os/exec"
-	"strings"
 )
 
 var version = "1.8"

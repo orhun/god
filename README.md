@@ -8,14 +8,14 @@ Shortcuts of [commonly used git commands](https://github.com/joshnh/Git-Commands
 
 ## Installation
 
-### AUR ([god-git](https://aur.archlinux.org/packages/god-git/))
+### AUR ([god](https://aur.archlinux.org/packages/god/))
 
-[![AUR](https://img.shields.io/aur/version/god-git.svg?style=flat-square)](https://aur.archlinux.org/packages/god-git/)
+[![AUR](https://img.shields.io/aur/version/god.svg?style=flat-square)](https://aur.archlinux.org/packages/god/)
 
 Installation can be made with a AUR helper tool like [Trizen](https://aur.archlinux.org/packages/trizen/) or [yay](https://aur.archlinux.org/packages/yay/).
 
 ```
-trizen god-git
+yay -S god
 ```
 
 ### Manual Installation

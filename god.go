@@ -5,9 +5,11 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/carmark/pseudo-terminal-go/terminal"
 	"github.com/common-nighthawk/go-figure"
@@ -188,6 +190,8 @@ cmdLoop:
 			showVersion()
 		case "git":
 			showCommands()
+		case "god":
+			showWarning()
 		case "sc":
 			showShortcuts()
 		case "alias":
@@ -197,12 +201,14 @@ cmdLoop:
 			gitCmd := buildCmd(line)
 			// Release the std in/out for preventing the
 			// git username & password input issues.
-			if strings.Contains(gitCmd, "push") {
+			if strings.Contains(gitCmd, " push") {
 				restartTerm = true
 				term.ReleaseFromStdInOut()
 			}
 			// Handle the execution of the input.
-			if retval := execCmd(true, "sh", "-c", gitCmd); len(retval) > 0 {
+			if strings.Contains(gitCmd, " god ") {
+				showWarning()
+			} else if retval := execCmd(true, "sh", "-c", gitCmd); len(retval) > 0 {
 				fmt.Fprintln(os.Stderr, retval)
 			}
 			// Restart the terminal for flushing the stdout.
@@ -258,6 +264,23 @@ func showCommands() {
 		table.Append([]string{cmd, gitCmdSlice[index]})
 	}
 	table.Render()
+}
+
+// Show a warning from god.
+func showWarning() {
+	messages := []string{
+		"Yes?",
+		"What?",
+		"Here.",
+		"What else do you want?",
+		"God hears you.",
+		"Hello, this is God. How may I be of assistance?",
+		"Repeating my name won't get you to the UNIX paradise.",
+		"You already have God's attention. Simply state your business.",
+		"Fetching God from a higher dimension... Please wait...",
+	}
+	rand.Seed(time.Now().Unix())
+	whiteColor.Println(messages[rand.Intn(len(messages))])
 }
 
 // Show commonly used git commands shortcuts.
